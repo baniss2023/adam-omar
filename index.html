@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adam & Omar - Compteur</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+    }
+
+    body {
+      overflow-y: auto;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      padding: clamp(14px, 3vw, 32px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 3vw, 26px);
+    }
+
+    .titre {
+      width: 100%;
+      text-align: center;
+      font-size: clamp(42px, 9vw, 92px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: 1px;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .tableau {
+      width: 100%;
+      max-width: 1150px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(14px, 2.5vw, 24px);
+    }
+
+    .carte-principale {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: clamp(18px, 3vw, 32px);
+      padding: clamp(18px, 4vw, 36px);
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35);
+    }
+
+    .ligne-valeurs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(14px, 3vw, 28px);
+      align-items: stretch;
+    }
+
+    .bloc {
+      width: 100%;
+      min-width: 0;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: clamp(16px, 2.5vw, 26px);
+      padding: clamp(16px, 3vw, 28px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .label {
+      font-size: clamp(20px, 3.6vw, 34px);
+      font-weight: 700;
+      opacity: 0.88;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .valeur {
+      font-size: clamp(44px, 9vw, 110px);
+      font-weight: 900;
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .argent {
+      color: #22c55e;
+    }
+
+    .infos {
+      width: 100%;
+      margin-top: clamp(16px, 3vw, 28px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(10px, 2vw, 18px);
+    }
+
+    .info {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: clamp(12px, 2.5vw, 20px);
+      text-align: center;
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 700;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .info span {
+      display: block;
+      margin-top: 6px;
+      font-size: clamp(20px, 3.5vw, 34px);
+      color: #facc15;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .boutons {
+      width: 100%;
+      max-width: 1150px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(10px, 2vw, 18px);
+    }
+
+    button {
+      width: 100%;
+      min-height: clamp(58px, 9vw, 86px);
+      border: none;
+      border-radius: 18px;
+      padding: 12px;
+      font-size: clamp(20px, 3.5vw, 34px);
+      font-weight: 900;
+      cursor: pointer;
+      color: white;
+      background: #2563eb;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .pause {
+      background: #f59e0b;
+    }
+
+    .reset {
+      background: #64748b;
+    }
+
+    .etat {
+      width: 100%;
+      max-width: 1150px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 700;
+      opacity: 0.9;
+      line-height: 1.25;
+    }
+
+    @media (max-width: 850px) {
+      .ligne-valeurs {
+        grid-template-columns: 1fr;
+      }
+
+      .infos {
+        grid-template-columns: 1fr;
+      }
+
+      .boutons {
+        grid-template-columns: 1fr;
+      }
+
+      .valeur {
+        font-size: clamp(48px, 14vw, 96px);
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 620px) {
+      .page {
+        min-height: auto;
+      }
+
+      .titre {
+        font-size: clamp(34px, 7vw, 64px);
+      }
+
+      .carte-principale {
+        padding: 18px;
+      }
+
+      .bloc {
+        padding: 16px;
+      }
+
+      .valeur {
+        font-size: clamp(38px, 7vw, 76px);
+      }
+
+      button {
+        min-height: 54px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <h1 class="titre">Adam &amp; Omar</h1>
+
+    <section class="tableau">
+      <div class="carte-principale">
+        <div class="ligne-valeurs">
+          <div class="bloc">
+            <div class="label">Temps écoulé</div>
+            <div id="temps" class="valeur">00:00:00</div>
+          </div>
+
+          <div class="bloc">
+            <div class="label">Montant gagné</div>
+            <div id="argent" class="valeur argent">0.00 $</div>
+          </div>
+        </div>
+
+        <div class="infos">
+          <div class="info">
+            Salaire par heure
+            <span>25.00 $</span>
+          </div>
+
+          <div class="info">
+            Salaire par minute
+            <span id="minute">0.42 $</span>
+          </div>
+
+          <div class="info">
+            État du compteur
+            <span id="etatCourt">Arrêté</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="boutons">
+      <button id="demarrer">Démarrer</button>
+      <button id="pause" class="pause">Pause</button>
+      <button id="reset" class="reset">Remettre à zéro</button>
+    </section>
+
+    <div id="etatLong" class="etat">
+      Toutes les informations sont visibles : temps, montant, salaire par heure, salaire par minute et état du compteur.
+    </div>
+  </main>
+
+  <script>
+    const salaireParHeure = 25;
+    const salaireParMinute = salaireParHeure / 60;
+    const salaireParSeconde = salaireParHeure / 3600;
+
+    let tempsDepart = null;
+    let tempsCumule = 0;
+    let compteurActif = false;
+
+    const affichageTemps = document.getElementById("temps");
+    const affichageArgent = document.getElementById("argent");
+    const affichageMinute = document.getElementById("minute");
+    const affichageEtatCourt = document.getElementById("etatCourt");
+    const affichageEtatLong = document.getElementById("etatLong");
+
+    const boutonDemarrer = document.getElementById("demarrer");
+    const boutonPause = document.getElementById("pause");
+    const boutonReset = document.getElementById("reset");
+
+    affichageMinute.textContent = salaireParMinute.toFixed(2) + " $";
+
+    function formaterTemps(totalSecondes) {
+      const heures = Math.floor(totalSecondes / 3600);
+      const minutes = Math.floor((totalSecondes % 3600) / 60);
+      const secondes = Math.floor(totalSecondes % 60);
+
+      return String(heures).padStart(2, "0") + ":" +
+             String(minutes).padStart(2, "0") + ":" +
+             String(secondes).padStart(2, "0");
+    }
+
+    function calculerTempsTotal() {
+      let tempsTotal = tempsCumule;
+
+      if (compteurActif) {
+        tempsTotal += (Date.now() - tempsDepart) / 1000;
+      }
+
+      return tempsTotal;
+    }
+
+    function mettreAJour() {
+      const tempsTotal = calculerTempsTotal();
+      const montant = tempsTotal * salaireParSeconde;
+
+      affichageTemps.textContent = formaterTemps(tempsTotal);
+      affichageArgent.textContent = montant.toFixed(2) + " $";
+
+      if (compteurActif) {
+        affichageEtatCourt.textContent = "En marche";
+        affichageEtatLong.textContent = "Le compteur est en marche. Le montant augmente automatiquement selon 25 $ par heure.";
+      } else {
+        affichageEtatCourt.textContent = "Arrêté";
+        affichageEtatLong.textContent = "Le compteur est arrêté. Appuie sur Démarrer pour continuer.";
+      }
+
+      requestAnimationFrame(mettreAJour);
+    }
+
+    boutonDemarrer.addEventListener("click", function () {
+      if (!compteurActif) {
+        tempsDepart = Date.now();
+        compteurActif = true;
+      }
+    });
+
+    boutonPause.addEventListener("click", function () {
+      if (compteurActif) {
+        tempsCumule += (Date.now() - tempsDepart) / 1000;
+        compteurActif = false;
+      }
+    });
+
+    boutonReset.addEventListener("click", function () {
+      tempsDepart = null;
+      tempsCumule = 0;
+      compteurActif = false;
+    });
+
+    mettreAJour();
+  </script>
+</body>
+</html>
