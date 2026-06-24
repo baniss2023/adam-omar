@@ -33,26 +33,21 @@
     }
 
     .titre {
-      width: 100%;
       text-align: center;
       font-size: clamp(42px, 9vw, 92px);
       font-weight: 900;
       line-height: 1.05;
-      letter-spacing: 1px;
       margin: 0;
       word-break: break-word;
     }
 
-    .tableau {
+    .conteneur {
       width: 100%;
       max-width: 1150px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: clamp(14px, 2.5vw, 24px);
     }
 
-    .carte-principale {
+    .carte {
       width: 100%;
       background: rgba(255, 255, 255, 0.11);
       border: 1px solid rgba(255, 255, 255, 0.22);
@@ -65,27 +60,20 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: clamp(14px, 3vw, 28px);
-      align-items: stretch;
     }
 
     .bloc {
-      width: 100%;
       min-width: 0;
       background: rgba(255, 255, 255, 0.08);
       border-radius: clamp(16px, 2.5vw, 26px);
       padding: clamp(16px, 3vw, 28px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 8px;
     }
 
     .label {
       font-size: clamp(20px, 3.6vw, 34px);
       font-weight: 700;
-      opacity: 0.88;
-      line-height: 1.2;
-      word-break: break-word;
+      opacity: 0.9;
+      margin-bottom: 10px;
     }
 
     .valeur {
@@ -101,7 +89,6 @@
     }
 
     .infos {
-      width: 100%;
       margin-top: clamp(16px, 3vw, 28px);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -116,7 +103,6 @@
       font-size: clamp(18px, 3vw, 28px);
       font-weight: 700;
       line-height: 1.25;
-      word-break: break-word;
     }
 
     .info span {
@@ -146,20 +132,22 @@
       font-weight: 900;
       cursor: pointer;
       color: white;
+    }
+
+    #demarrer {
       background: #2563eb;
-      transition: transform 0.15s, background 0.15s;
+    }
+
+    #pause {
+      background: #f59e0b;
+    }
+
+    #reset {
+      background: #64748b;
     }
 
     button:active {
       transform: scale(0.98);
-    }
-
-    .pause {
-      background: #f59e0b;
-    }
-
-    .reset {
-      background: #64748b;
     }
 
     .etat {
@@ -170,7 +158,7 @@
       font-size: clamp(18px, 3vw, 28px);
       font-weight: 700;
       opacity: 0.9;
-      line-height: 1.25;
+      line-height: 1.3;
     }
 
     @media (max-width: 850px) {
@@ -200,7 +188,7 @@
         font-size: clamp(34px, 7vw, 64px);
       }
 
-      .carte-principale {
+      .carte {
         padding: 18px;
       }
 
@@ -223,8 +211,8 @@
   <main class="page">
     <h1 class="titre">Adam &amp; Omar</h1>
 
-    <section class="tableau">
-      <div class="carte-principale">
+    <section class="conteneur">
+      <div class="carte">
         <div class="ligne-valeurs">
           <div class="bloc">
             <div class="label">Temps écoulé</div>
@@ -245,7 +233,7 @@
 
           <div class="info">
             Salaire par minute
-            <span id="minute">0.50 $</span>
+            <span id="salaireMinute">0.50 $</span>
           </div>
 
           <div class="info">
@@ -258,12 +246,12 @@
 
     <section class="boutons">
       <button id="demarrer">Démarrer</button>
-      <button id="pause" class="pause">Pause</button>
-      <button id="reset" class="reset">Remettre à zéro</button>
+      <button id="pause">Pause</button>
+      <button id="reset">Remettre à zéro</button>
     </section>
 
     <div id="etatLong" class="etat">
-      Toutes les informations sont visibles : temps, montant, salaire par heure, salaire par minute et état du compteur.
+      Le compteur est arrêté. Appuie sur Démarrer pour commencer.
     </div>
   </main>
 
@@ -276,17 +264,17 @@
     let tempsCumule = 0;
     let compteurActif = false;
 
-    const affichageTemps = document.getElementById("temps");
-    const affichageArgent = document.getElementById("argent");
-    const affichageMinute = document.getElementById("minute");
-    const affichageEtatCourt = document.getElementById("etatCourt");
-    const affichageEtatLong = document.getElementById("etatLong");
+    const tempsElement = document.getElementById("temps");
+    const argentElement = document.getElementById("argent");
+    const salaireMinuteElement = document.getElementById("salaireMinute");
+    const etatCourtElement = document.getElementById("etatCourt");
+    const etatLongElement = document.getElementById("etatLong");
 
     const boutonDemarrer = document.getElementById("demarrer");
     const boutonPause = document.getElementById("pause");
     const boutonReset = document.getElementById("reset");
 
-    affichageMinute.textContent = salaireParMinute.toFixed(2) + " $";
+    salaireMinuteElement.textContent = salaireParMinute.toFixed(2) + " $";
 
     function formaterTemps(totalSecondes) {
       const heures = Math.floor(totalSecondes / 3600);
@@ -298,7 +286,7 @@
              String(secondes).padStart(2, "0");
     }
 
-    function calculerTempsTotal() {
+    function obtenirTempsTotal() {
       let tempsTotal = tempsCumule;
 
       if (compteurActif) {
@@ -308,22 +296,22 @@
       return tempsTotal;
     }
 
-    function mettreAJour() {
-      const tempsTotal = calculerTempsTotal();
+    function mettreAJourAffichage() {
+      const tempsTotal = obtenirTempsTotal();
       const montant = tempsTotal * salaireParSeconde;
 
-      affichageTemps.textContent = formaterTemps(tempsTotal);
-      affichageArgent.textContent = montant.toFixed(2) + " $";
+      tempsElement.textContent = formaterTemps(tempsTotal);
+      argentElement.textContent = montant.toFixed(2) + " $";
 
       if (compteurActif) {
-        affichageEtatCourt.textContent = "En marche";
-        affichageEtatLong.textContent = "Le compteur est en marche. Le montant augmente automatiquement selon 30 $ par heure.";
+        etatCourtElement.textContent = "En marche";
+        etatLongElement.textContent = "Le compteur est en marche. Le montant augmente selon 30 $ par heure.";
       } else {
-        affichageEtatCourt.textContent = "Arrêté";
-        affichageEtatLong.textContent = "Le compteur est arrêté. Appuie sur Démarrer pour continuer.";
+        etatCourtElement.textContent = "Arrêté";
+        etatLongElement.textContent = "Le compteur est arrêté. Appuie sur Démarrer pour continuer.";
       }
 
-      requestAnimationFrame(mettreAJour);
+      requestAnimationFrame(mettreAJourAffichage);
     }
 
     boutonDemarrer.addEventListener("click", function () {
@@ -346,7 +334,7 @@
       compteurActif = false;
     });
 
-    mettreAJour();
+    mettreAJourAffichage();
   </script>
 </body>
 </html>
