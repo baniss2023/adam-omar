@@ -240,12 +240,12 @@
         <div class="infos">
           <div class="info">
             Salaire par heure
-            <span>25.00 $</span>
+            <span>30.00 $</span>
           </div>
 
           <div class="info">
             Salaire par minute
-            <span id="minute">0.42 $</span>
+            <span id="minute">0.50 $</span>
           </div>
 
           <div class="info">
@@ -268,7 +268,7 @@
   </main>
 
   <script>
-    const salaireParHeure = 25;
+    const salaireParHeure = 30;
     const salaireParMinute = salaireParHeure / 60;
     const salaireParSeconde = salaireParHeure / 3600;
 
@@ -317,7 +317,7 @@
 
       if (compteurActif) {
         affichageEtatCourt.textContent = "En marche";
-        affichageEtatLong.textContent = "Le compteur est en marche. Le montant augmente automatiquement selon 25 $ par heure.";
+        affichageEtatLong.textContent = "Le compteur est en marche. Le montant augmente automatiquement selon 30 $ par heure.";
       } else {
         affichageEtatCourt.textContent = "Arrêté";
         affichageEtatLong.textContent = "Le compteur est arrêté. Appuie sur Démarrer pour continuer.";
